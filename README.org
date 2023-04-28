@@ -1,0 +1,64 @@
+* bilibili收藏夹失效视频清除
+** 没有自带的一键清除，所以写了一个简单的脚本
+** 使用说明
+- 请先在 [[./main.py][main.py]] 提供中 uid, SESSDATA, bili_jct token
+    #+BEGIN_SRC shell
+        python main.py -h
+                       --remove # 移除失效视频
+                       --write_to_json # 将所有收藏夹及其视频相关信息写入json(For Debugging purpose)
+    #+END_SRC
+- User uid
+
+    #+CAPTION: User Uid
+    #+NAME: fig:browser-screenshot-uid
+    #+ATTR_HTML: :width 400px
+    [[./img/user-uid.png][uid 图示]]
+
+- SESSDATA cookie
+
+  #+CAPTION: Cookie needed to access private fav list
+  #+NAME: fig:browser-screenshot-cookie
+  #+ATTR_HTML: :width 400px
+  [[./img/browser-screenshot-cookie.png][cookie 图示]]
+
+
+- bili_jct CSRF token
+
+  #+CAPTION: Cookie needed to access private fav list
+  #+NAME: fig:browser-screenshot-csrf
+  #+ATTR_HTML: :width 400px
+  [[./img/bili-jct.png][bili_jct 图示]]
+
+
+** 所使用的api
+*** 列出全部收藏夹
+    #+BEGIN_SRC shell
+    curl -G 'https://api.bilibili.com/x/v3/fav/folder/created/list-all' \
+        --data-urlencode 'up_mid=你的uid' \
+        -b 'SESSDATA=你的SEDSSDATA'
+    #+END_SRC
+
+*** [[https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/docs/fav/action.md#:~:text=%E6%9F%A5%E7%9C%8B%E5%93%8D%E5%BA%94%E7%A4%BA%E4%BE%8B%EF%BC%9A-,%E6%B8%85%E7%A9%BA%E6%89%80%E6%9C%89%E5%A4%B1%E6%95%88%E5%86%85%E5%AE%B9,-https%3A//api.bilibili][移除失效视频]]
+    #+BEGIN_SRC shell
+        curl 'https://api.bilibili.com/x/v3/fav/resource/clean' \
+        --data-urlencode 'media_id=1161340172' \
+        --data-urlencode 'csrf=xxx' \
+        -b 'SESSDATA=xxx'
+    #+END_SRC
+
+*** 移除失效视频的api只需要收藏夹id就可以工作, 所以并不需要下面这个api
+*** 但是我使用这个api用于列出所有收藏夹内的所有视频
+[[https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/docs/fav/action.md#:~:text=%E6%9F%A5%E7%9C%8B%E5%93%8D%E5%BA%94%E7%A4%BA%E4%BE%8B%EF%BC%9A-,%E6%89%B9%E9%87%8F%E5%88%A0%E9%99%A4%E5%86%85%E5%AE%B9,-https%3A//api.bilibili][Link to Github Bilibili api for getting all the videos in all fodlers]]
+#+BEGIN_SRC shell
+    curl -G 'https://api.bilibili.com/x/v3/fav/resource/list' \
+    --data-urlencode 'media_id=71109562' \
+    --data-urlencode 'platform=web' \
+    --data-urlencode 'pn=1' \
+    --data-urlencode 'ps=5' \
+    -b 'SESSDATA=dafb1470%2C1690084979%2Ccd940%2A12'
+#+END_SRC
+
+** TODO:
+*** TODO If can't find csrf token (It's not hard though)
+run the ts script to automatically add them
+*** TODO Maybe make a plugin with is
