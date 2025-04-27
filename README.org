@@ -59,6 +59,6 @@
 #+END_SRC
 
 ** TODO:
-*** TODO If can't find csrf token (It's not hard though)
+*** TODO If can't find csrf token
 run the ts script to automatically add them
-*** TODO Maybe make a plugin with is
+*** TODO Maybe make a plugin with this
